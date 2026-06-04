@@ -2,7 +2,7 @@
 <p align="center">1.0</p>
 
 # Rationale
-When working with binary protocols the format and details of the documentation have been inconsistent and often hard to follow.  The binary protocol description standard (BPDS) tries to fix this, using a standard format that is human readable, intuitive, and text based.  The hope is that will improve the readability of the documentation for byte based protocols.
+When working with binary protocols the format and details of the documentation have been inconsistent and often hard to follow.  The packet description standard (BPDS) tries to fix this, using a standard format that is human readable, intuitive, and text based.  The hope is that will improve the readability of the documentation for byte based protocols.
 
 The format was designed to be used by humans to document byte based binary protocols in a simple to understand format.  It tries to keep things simple whenever possible, and doesn't try to cover every possible use case.  BPDS does not try to represent possible states, message responses, the flow of a protocol, handshaking, or how the protocol should be used. It just tries to explain the structure of a packet of data, not how to work with it.
 
@@ -63,7 +63,7 @@ Documented in Autodoc format (as a C comment):
 As you can see when used with an Autodoc style comment it is very effective at explaining the protocol and can be included directly with the handling code.
 
 # Goals
-The binary protocol description standard has a number of goals:
+The packet description standard has a number of goals:
 | Goal              | Description |
 | ---               | ---         |
 | Human readable    | AscII characters are used for the symbols that mark parts of the specification, these are easy to pick out from the text and are used extensively in programming.  The field names and labels are human readable strings. |
