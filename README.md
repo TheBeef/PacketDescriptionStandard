@@ -2,11 +2,11 @@
 <p align="center">1.0</p>
 
 # Rationale
-When working with binary protocols the format and details of the documentation have been inconsistent and often hard to follow.  The packet description standard (BPDS) tries to fix this, using a standard format that is human readable, intuitive, and text based.  The hope is that will improve the readability of the documentation for byte based protocols.
+When working with binary protocols the format and details of the documentation have been inconsistent and often hard to follow.  The packet description standard (PDS) tries to fix this, using a standard format that is human readable, intuitive, and text based.  The hope is that will improve the readability of the documentation for byte based protocols.
 
-The format was designed to be used by humans to document byte based binary protocols in a simple to understand format.  It tries to keep things simple whenever possible, and doesn't try to cover every possible use case.  BPDS does not try to represent possible states, message responses, the flow of a protocol, handshaking, or how the protocol should be used. It just tries to explain the structure of a packet of data, not how to work with it.
+The format was designed to be used by humans to document byte based binary protocols in a simple to understand format.  It tries to keep things simple whenever possible, and doesn't try to cover every possible use case.  PDS does not try to represent possible states, message responses, the flow of a protocol, handshaking, or how the protocol should be used. It just tries to explain the structure of a packet of data, not how to work with it.
 
-BPDS was also designed so that a machine can parse a BPDS definition and be able to decode what bytes in a protocol are for what. It cannot interpret the meaning of a byte, only extract the structure of the packet, knowing how to recognize the start and end of the packet and label the parts.
+PDS was also designed so that a machine can parse a PDS definition and be able to decode what bytes in a protocol are for what. It cannot interpret the meaning of a byte, only extract the structure of the packet, knowing how to recognize the start and end of the packet and label the parts.
 
 # Example
 We start with an example to give an idea of how this works.
@@ -67,8 +67,8 @@ The packet description standard has a number of goals:
 | Goal              | Description |
 | ---               | ---         |
 | Human readable    | AscII characters are used for the symbols that mark parts of the specification, these are easy to pick out from the text and are used extensively in programming.  The field names and labels are human readable strings. |
-| Machine readable  | Computers should be able to parse a BPDS definition string to be able to act on a byte stream encoded in that format.  This is useful for things like generic highlighters or error checkers. |
-| Intuitive         | Someone should be able to look at a BPDS definition string and more or less understand how to interpret the meaning without needing to read a document explaining what BPDS is or how it works. |
+| Machine readable  | Computers should be able to parse a PDS definition string to be able to act on a byte stream encoded in that format.  This is useful for things like generic highlighters or error checkers. |
+| Intuitive         | Someone should be able to look at a PDS definition string and more or less understand how to interpret the meaning without needing to read a document explaining what PDS is or how it works. |
 | Single line       | A single line should be able to describe a packet.  This keeps the description compact and allows it be added to larger documents. |
 | Text based        | Sticking with a text based description means it can be easily copied and embedded in other documents like in source code. |
 | Byte based        | Most protocols are byte-based.  Supporting arbitrary bit-level protocols would significantly increase complexity and is therefore intentionally excluded. |
@@ -78,12 +78,12 @@ The packet description standard has a number of goals:
 | ---               | ---         |
 | Field             | A grouping of bytes that form an element of the protocol.  This maybe a single byte or multiple bytes together.  This identifies a part of the message.  For example, the length would be considered a field that indicates the length in the message. |
 | Literal           | A constant value that must match this value in the byte stream. |
-| Symbol            | A byte that is recognized as having meaning in the BPDS.  For example, '<' and '>' mark the start and end of a field. |
+| Symbol            | A byte that is recognized as having meaning in the PDS.  For example, '<' and '>' mark the start and end of a field. |
 | Field name        | The name of a field.  This is alpha numeric, starting with a letter. |
 | Label             | When a size refers to a previous field name it is called a label. |
 | Value             | The value of a field when a literal is used.  This maybe a number or a string. |
 | Attribute         | An attribute is a symbol that modifies a field.  An example is the Size (:) attribute. |
-| Definition        | The whole BPDS string that defines a matching set of fields. |
+| Definition        | The whole PDS string that defines a matching set of fields. |
 
 # Format
 ## Symbols
@@ -108,7 +108,7 @@ If it's a string then it will have quotes around it and will have a size the sam
 If the field is not a literal then it starts with the name of the field followed by any attributes.  For example, <Start>, <Start:2>, <Start=0xFF>.
 
 #### Examples
-| BPDS              | Description |
+| PDS               | Description |
 | ---               | ---         |
 | <0x55>            | A literal that must be 55 hex. |
 | <0x55\|0xAA>      | A literal that must be 55 hex OR AA hex. |
@@ -131,7 +131,7 @@ Numbers use C language literal number prefixes.  Supported prefixes:
 Strings are wrapped in quotes.  Quotes nest, so this means that quotes are counted, there must always a matching end quote for every quote in the literal.  There is no need to escape the quotes inside literals.
 
 #### Examples
-| BPDS                   | Description |
+| PDS                    | Description |
 | ---                    | ---         |
 | <0xFF>                 | Must match the value 255 |
 | <0xFF\|0xEE>           | Can match 0xFF OR 0xEE |
@@ -143,7 +143,7 @@ Strings are wrapped in quotes.  Quotes nest, so this means that quotes are count
 The assigned value is the same as a Literal value but with a field name.  The literal value is after a equal sign (=) and follows the same rules as a literal.
 
 #### Examples
-| BPDS                      | Description |
+| PDS                       | Description |
 | ---                       | ---         |
 | <Name=0xFF>               | Field has the name "Name" as must match the value 0xFF |
 | \<Start=0xFF\|0xEE\>      | Field has the name "Start" and can match 0xFF or 0xEE |
@@ -153,7 +153,7 @@ The assigned value is the same as a Literal value but with a field name.  The li
 The OR symbol (|) is used to say any literal from a set of literal can be a match.  These can be numbers or strings (but they cannot be mixed).  You list all the values you wish to accept with a pipe bar between them.  This is valid in assigned values and literal values.
 
 #### Examples
-| BPDS                      | Description |
+| PDS                       | Description |
 | ---                       | ---         |
 | <0x55\|0xAA\|0x00>        | A literal that must be 55 hex OR AA hex OR 00 hex. |
 | <Start=0xFF\|0xEE>        | Field has the name "Start" and can match 0xFF OR 0xEE |
@@ -167,7 +167,7 @@ This can also be the field name of a previous field. In this case what is being 
 This can also be set to variable size (...) in which case it means that the size of this field is variable and may be between 0 and unlimited.  The field is terminated by the next field.  So for example, if a size is variable size and the next field is a literal 0x0A then all the bytes between this point and the 0x0A fit into this field.  See variable size below for more info.
 
 #### Examples
-| BPDS                      | Description |
+| PDS                       | Description |
 | ---                       | ---         |
 | \<Len:2\>                 | The length is 2 bytes |
 | \<Data:32\>               | This field is 32 bytes long |
@@ -188,7 +188,7 @@ For example, if you have <Data:...><0x0A> this matches all chars until a 0x0A (n
 If the next field is more than 1 byte then all the bytes have to match and will not be part of the field using the variable size symbol.
 
 #### Examples
-| BPDS                                                  | Description |
+| PDS                                                   | Description |
 | ---                                                   | ---         |
 | \<Data:...\>\<0x00\>                                  | A zero terminated string |
 | \<CmdNum:...\>\<EndOfCmd="END"\>                      | A string that must end is the string "END".  So 0x31 0x32 0x45 0x4E 0x44 would end up with a CmdNum field = to "12". |
@@ -203,7 +203,7 @@ The following symbols are reserved for future use.  Math symbols have not being 
 
 # Tips
 ## Optional fields
-BPDS does not include optional fields, this is because for optional fields there needs context and knowledge of the meaning of the bytes which is out of scope for the BPDS.  However you can handle optional fields by using additional BPDS definitions.  For example, for a single optional field you can write two BPDS definition.  One with the optional field in it and a second version with it missing.  You then document the condition in the Autodoc for each definition (see the examples).
+PDS does not include optional fields, this is because for optional fields there needs context and knowledge of the meaning of the bytes which is out of scope for the PDS.  However you can handle optional fields by using additional PDS definitions.  For example, for a single optional field you can write two PDS definition.  One with the optional field in it and a second version with it missing.  You then document the condition in the Autodoc for each definition (see the examples).
 
 ## Autodoc
 This is a blank Autodoc you can use if you decide to use this format for your details documentation.
@@ -374,5 +374,5 @@ This is another example of a different draw command.  It shows a draw bitmap com
 ```
 
 # License
-Binary Protocol Description Standard  © 2026 by Paul Hutchinson is licensed under CC BY-SA 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
+Packet Description Standard  © 2026 by Paul Hutchinson is licensed under CC BY-SA 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
 
