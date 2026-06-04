@@ -1,4 +1,4 @@
-<p align="center">Binary Protocol Description Standard</p>
+<p align="center">Packet Description Standard</p>
 <p align="center">1.0</p>
 
 # Rationale
